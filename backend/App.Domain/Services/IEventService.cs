@@ -1,4 +1,5 @@
 using App.Common.DTOs.Events;
+using App.Common.DTOs.Reports;
 
 namespace App.Domain.Services;
 
@@ -19,4 +20,10 @@ public interface IEventService
     /// Retrieves events matching the given filters, resolving each event's effective status (BR-06).
     /// </summary>
     Task<List<EventListItemResponse>> GetEventsAsync(EventFilterRequest filter);
+
+    /// <summary>
+    /// Builds the occupancy report for a given event (FR-06): tickets sold, tickets available, occupancy
+    /// percentage, total revenue, and the event's effective status (BR-06).
+    /// </summary>
+    Task<OccupancyReportResponse> GetOccupancyReportAsync(int eventId);
 }

@@ -1,5 +1,6 @@
 using App.Common.Constants;
 using App.Common.DTOs.Events;
+using App.Common.DTOs.Reports;
 using App.Domain.Exceptions;
 using App.Domain.Services;
 using App.Infrastructure.Entities;
@@ -140,6 +141,42 @@ public class EventServiceTests
 
         Assert.Contains("Name", exception.Message);
         eventRepositoryMock.Verify(repo => repo.GetVenueCapacityAsync(It.IsAny<int>()), Times.Never);
+    }
+
+    // ----- GetOccupancyReportAsync -----
+
+    [Fact]
+    public async Task GetOccupancyReportAsync_WhenEventDoesNotExist_ThrowsNotFoundException()
+    {
+        Mock<IEventRepository> eventRepositoryMock = new Mock<IEventRepository>();
+        eventRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Event?)null);
+
+        EventService eventService = CreateService(eventRepositoryMock, new Mock<IReservationRepository>(), new Mock<IUnitOfWork>(), CreateAlwaysValidValidatorMock().Object);
+
+        await Assert.ThrowsAsync<NotFoundException>(() => eventService.GetOccupancyReportAsync(1));
+    }
+
+    [Fact]
+    public async Task GetOccupancyReportAsync_WhenEventHasConfirmedPendingAndLostReservations_CalculatesReportCorrectly()
+    {
+        Event existingEvent = CreateActiveEvent(maxCapacity: 100, price: 50m);
+
+        Mock<IEventRepository> eventRepositoryMock = new Mock<IEventRepository>();
+        eventRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(existingEvent);
+
+        // 20 Confirmed (sold), 5 PendingPayment, 5 Lost: all three block availability, but only Confirmed counts as sold/revenue.
+        Mock<IReservationRepository> reservationRepositoryMock = new Mock<IReservationRepository>();
+        reservationRepositoryMock.Setup(repo => repo.GetTicketsSummaryByEventIdAsync(existingEvent.Id)).ReturnsAsync(new TicketsSummary(20, 5, 5));
+
+        EventService eventService = CreateService(eventRepositoryMock, reservationRepositoryMock, new Mock<IUnitOfWork>(), CreateAlwaysValidValidatorMock().Object);
+
+        OccupancyReportResponse report = await eventService.GetOccupancyReportAsync(existingEvent.Id);
+
+        Assert.Equal(20, report.TicketsSold);
+        Assert.Equal(70, report.TicketsAvailable);
+        Assert.Equal(20m, report.OccupancyPercentage);
+        Assert.Equal(1000m, report.TotalRevenue);
+        Assert.Equal("Active", report.EventStatusName);
     }
 
     private static EventService CreateService(

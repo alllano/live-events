@@ -1,5 +1,6 @@
 using App.Common.Constants;
 using App.Common.DTOs.Events;
+using App.Common.DTOs.Reports;
 using App.Domain.Exceptions;
 using App.Infrastructure.Entities;
 using App.Infrastructure.Persistence;
@@ -98,6 +99,30 @@ public class EventService : IEventService
         }
 
         return responses;
+    }
+
+    public async Task<OccupancyReportResponse> GetOccupancyReportAsync(int eventId)
+    {
+        Event? existingEvent = await _eventRepository.GetByIdAsync(eventId);
+        if (existingEvent is null)
+        {
+            throw new NotFoundException($"Event with id {eventId} was not found.");
+        }
+
+        TicketsSummary ticketsSummary = await _reservationRepository.GetTicketsSummaryByEventIdAsync(eventId);
+        int ticketsSold = ticketsSummary.ConfirmedQuantity;
+        int ticketsAvailable = TicketAvailabilityCalculator.CalculateAvailableTickets(existingEvent.MaxCapacity, ticketsSummary);
+
+        return new OccupancyReportResponse
+        {
+            EventId = existingEvent.Id,
+            EventName = existingEvent.Name,
+            TicketsSold = ticketsSold,
+            TicketsAvailable = ticketsAvailable,
+            OccupancyPercentage = Math.Round((decimal)ticketsSold / existingEvent.MaxCapacity * 100m, 2),
+            TotalRevenue = ticketsSold * existingEvent.Price,
+            EventStatusName = ResolveEffectiveEventStatusName(existingEvent)
+        };
     }
 
     // BR-06: an Active event is reported as "Completed" once its EndDate has elapsed, without persisting the change; any other persisted status (e.g. Cancelled) is reported as-is.

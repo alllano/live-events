@@ -357,6 +357,29 @@ public class ReservationServiceTests
         Assert.Equal(ReservationStatusIds.Cancelled, lostReservation.ReservationStatusId);
     }
 
+    // ----- GetReservationsByEventIdAsync -----
+
+    [Fact]
+    public async Task GetReservationsByEventIdAsync_WhenEventHasReservations_MapsResponsesWithResolvedStatusName()
+    {
+        Event eventEntity = CreateEvent();
+        Customer customer = CreateCustomer();
+        Reservation confirmedReservation = CreateReservation(1, eventEntity, customer, ReservationStatusIds.Confirmed, ticketQuantity: 2, reservationCode: "EV-123456");
+
+        Mock<IReservationRepository> reservationRepositoryMock = new Mock<IReservationRepository>();
+        reservationRepositoryMock.Setup(repo => repo.GetByEventIdAsync(eventEntity.Id)).ReturnsAsync(new List<Reservation> { confirmedReservation });
+
+        ReservationService reservationService = CreateService(new Mock<IEventRepository>(), reservationRepositoryMock, new Mock<ICustomerRepository>(), new Mock<IUnitOfWork>(), CreateAlwaysValidValidatorMock().Object);
+
+        List<ReservationResponse> responses = await reservationService.GetReservationsByEventIdAsync(eventEntity.Id);
+
+        Assert.Single(responses);
+        Assert.Equal("Confirmed", responses[0].ReservationStatusName);
+        Assert.Equal("EV-123456", responses[0].ReservationCode);
+        Assert.Equal(eventEntity.Name, responses[0].EventName);
+        Assert.Equal(customer.Name, responses[0].CustomerName);
+    }
+
     // ----- Shared helpers -----
 
     private static ReservationService CreateService(

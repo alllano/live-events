@@ -17,6 +17,17 @@ public class ReservationsController : ControllerBase
     }
 
     /// <summary>
+    /// Retrieves all reservations for the given event.
+    /// </summary>
+    [HttpGet]
+    public async Task<ActionResult<ResponseDTO<List<ReservationResponse>>>> GetReservationsByEventIdAsync([FromQuery] int eventId)
+    {
+        List<ReservationResponse> reservations = await _reservationService.GetReservationsByEventIdAsync(eventId);
+        ResponseDTO<List<ReservationResponse>> response = ResponseDTO<List<ReservationResponse>>.AsResponseDTO(reservations, StatusCodes.Status200OK);
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Creates a reservation in PendingPayment status for the given event and customer (FR-03).
     /// </summary>
     [HttpPost]
