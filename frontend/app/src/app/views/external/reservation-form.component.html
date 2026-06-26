@@ -1,0 +1,49 @@
+<div class="reservation-form">
+  <h2>Reserve Tickets</h2>
+
+  <form [formRoot]="reservationForm">
+    <div class="field">
+      <label for="ticketQuantity">Ticket quantity</label>
+      <input id="ticketQuantity" type="number" [formField]="reservationForm.ticketQuantity" />
+      @for (error of reservationForm.ticketQuantity().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="customerName">Name</label>
+      <input id="customerName" type="text" [formField]="reservationForm.customerName" />
+      @for (error of reservationForm.customerName().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="customerEmail">Email</label>
+      <input id="customerEmail" type="email" [formField]="reservationForm.customerEmail" />
+      @for (error of reservationForm.customerEmail().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="customerPhone">Phone (optional)</label>
+      <input id="customerPhone" type="text" [formField]="reservationForm.customerPhone" />
+      @for (error of reservationForm.customerPhone().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Reserving...' : 'Reserve' }}
+    </button>
+  </form>
+
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+</div>
