@@ -1,6 +1,8 @@
-using App.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using App.Domain.Services;
 using App.Infrastructure.Mapping;
+using App.Infrastructure.Persistence;
+using App.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,16 @@ builder.Services.AddCors(options =>
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Repositories
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IVenueRepository, VenueRepository>();
+
+// Services
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
 
 var app = builder.Build();
 

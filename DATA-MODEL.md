@@ -168,7 +168,13 @@ Entity ↔ DTO mapping profiles live in `App.Infrastructure` (not `App.Common`),
 
 This logic belongs in the Service layer (`App.Domain`), not in the AutoMapper profile — `CreateReservationRequest → Reservation` only maps `EventId` and `TicketQuantity` directly; `CustomerId` is resolved separately before the entity is persisted.
 
-## Schema mapping (diagram naming → SQL Server schema/table → C# class)
+### 10. Implicit rule: reservations require an Active event
+
+The original requirements don't state this explicitly among BR-01 to BR-07, but it follows necessarily from the domain: a reservation cannot be created against an event whose `EventStatusId` is `Cancelled`. Allowing it would mean selling tickets for an event the organizer already cancelled.
+
+This check runs in `ReservationService.CreateReservationAsync`, immediately after confirming the Event exists and before evaluating BR-04 — if `EventStatusId != Active`, a `BusinessRuleException` is thrown.
+
+Note this only checks the persisted `EventStatusId` (`Active`/`Cancelled`), not the calculated `Completed` state (BR-06) — reserving tickets for an event whose `EndDate` has already passed is already prevented by BR-04 (the 1-hour-before-start restriction), so no separate check against the dynamically-calculated "Completed" status is needed here. (diagram naming → SQL Server schema/table → C# class)
 
 In the diagram above, the prefix before the underscore denotes the **SQL Server schema**, and the suffix after it is the **table name** — it is not a literal compound table name. C# Entity classes use the short name only (no prefix); the schema is applied via Fluent API (`ToTable("TableName", "SchemaName")`).
 

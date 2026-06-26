@@ -74,7 +74,7 @@ public class EventService : IEventService
         response.EventStatusName = ResolveEffectiveEventStatusName(existingEvent);
 
         TicketsSummary ticketsSummary = await _reservationRepository.GetTicketsSummaryByEventIdAsync(existingEvent.Id);
-        response.AvailableTickets = CalculateAvailableTickets(existingEvent.MaxCapacity, ticketsSummary);
+        response.AvailableTickets = TicketAvailabilityCalculator.CalculateAvailableTickets(existingEvent.MaxCapacity, ticketsSummary);
 
         return response;
     }
@@ -103,11 +103,6 @@ public class EventService : IEventService
         }
 
         return DateTime.Now > eventEntity.EndDate ? "Completed" : "Active";
-    }
-
-    private static int CalculateAvailableTickets(int maxCapacity, TicketsSummary ticketsSummary)
-    {
-        return maxCapacity - ticketsSummary.ConfirmedQuantity - ticketsSummary.PendingPaymentQuantity - ticketsSummary.LostQuantity;
     }
 
     private static bool ViolatesWeekendNightRestriction(DateTime startDate)

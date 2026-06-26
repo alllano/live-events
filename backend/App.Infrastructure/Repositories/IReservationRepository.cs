@@ -9,4 +9,5 @@ public interface IReservationRepository
     Task AddAsync(Reservation newReservation);
     Task UpdateAsync(Reservation reservation);
     Task<TicketsSummary> GetTicketsSummaryByEventIdAsync(int eventId);
+    Task<bool> ExistsByReservationCodeAsync(string reservationCode);
 }

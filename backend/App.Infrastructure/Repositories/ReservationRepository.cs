@@ -55,4 +55,9 @@ public class ReservationRepository : IReservationRepository
 
         return summary ?? new TicketsSummary(0, 0, 0);
     }
+
+    public async Task<bool> ExistsByReservationCodeAsync(string reservationCode)
+    {
+        return await _context.Reservations.AnyAsync(reservation => reservation.ReservationCode == reservationCode);
+    }
 }
