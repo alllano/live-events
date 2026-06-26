@@ -1,5 +1,6 @@
 using App.Common.DTOs.Common;
 using App.Common.DTOs.Events;
+using App.Common.DTOs.Reports;
 using App.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +48,17 @@ public class EventsController : ControllerBase
     {
         List<EventListItemResponse> events = await _eventService.GetEventsAsync(filter);
         ResponseDTO<List<EventListItemResponse>> response = ResponseDTO<List<EventListItemResponse>>.AsResponseDTO(events, StatusCodes.Status200OK);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Builds the occupancy report for the given event (FR-06).
+    /// </summary>
+    [HttpGet("{id}/report")]
+    public async Task<ActionResult<ResponseDTO<OccupancyReportResponse>>> GetOccupancyReportAsync([FromRoute] int id)
+    {
+        OccupancyReportResponse report = await _eventService.GetOccupancyReportAsync(id);
+        ResponseDTO<OccupancyReportResponse> response = ResponseDTO<OccupancyReportResponse>.AsResponseDTO(report, StatusCodes.Status200OK);
         return Ok(response);
     }
 }

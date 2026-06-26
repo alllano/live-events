@@ -26,4 +26,9 @@ public interface IReservationService
     /// Administrative action that releases a Lost reservation's tickets by transitioning it to Cancelled.
     /// </summary>
     Task<ReservationResponse> ReleaseLostReservationAsync(int reservationId);
+
+    /// <summary>
+    /// Retrieves all reservations for a given event.
+    /// </summary>
+    Task<List<ReservationResponse>> GetReservationsByEventIdAsync(int eventId);
 }

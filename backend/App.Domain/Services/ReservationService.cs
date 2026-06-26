@@ -152,6 +152,12 @@ public class ReservationService : IReservationService
         return BuildResponseWithResolvedStatus(existingReservation);
     }
 
+    public async Task<List<ReservationResponse>> GetReservationsByEventIdAsync(int eventId)
+    {
+        List<Reservation> reservations = await _reservationRepository.GetByEventIdAsync(eventId);
+        return _mapper.Map<List<ReservationResponse>>(reservations);
+    }
+
     private async Task<Reservation> GetReservationOrThrowAsync(int reservationId)
     {
         Reservation? reservation = await _reservationRepository.GetByIdAsync(reservationId);
