@@ -1,8 +1,12 @@
+using App.Common.DTOs.Events;
+using App.Common.DTOs.Reservations;
 using App.Domain.Services;
 using App.Infrastructure.Mapping;
 using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
+using App.Infrastructure.Validators;
 using App.web.Middleware;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +49,9 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 // Services
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
+
+builder.Services.AddScoped<IValidator<CreateEventRequest>, CreateEventRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateReservationRequest>, CreateReservationRequestValidator>();
 
 var app = builder.Build();
 
