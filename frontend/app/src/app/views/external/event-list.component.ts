@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { EventType } from '../../common/enums/event-type';
 import { EventFilterRequest } from '../../common/models/event-filter-request.model';
@@ -14,7 +15,7 @@ interface EventTypeOption {
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.scss',
 })

@@ -1,0 +1,42 @@
+<div class="event-detail">
+  <p *ngIf="loading()">Loading event...</p>
+
+  <p *ngIf="notFound()">Event not found.</p>
+
+  <ng-container *ngIf="!loading() && !notFound() && event() as currentEvent">
+    <h2>{{ currentEvent.name }}</h2>
+    <p>{{ currentEvent.description }}</p>
+
+    <dl>
+      <dt>Type</dt>
+      <dd>{{ currentEvent.eventTypeName }}</dd>
+
+      <dt>Status</dt>
+      <dd>{{ currentEvent.eventStatusName }}</dd>
+
+      <dt>Venue</dt>
+      <dd>{{ currentEvent.venueName }}</dd>
+
+      <dt>Max capacity</dt>
+      <dd>{{ currentEvent.maxCapacity }}</dd>
+
+      <dt>Available tickets</dt>
+      <dd>{{ currentEvent.availableTickets }}</dd>
+
+      <dt>Start date</dt>
+      <dd>{{ currentEvent.startDate | date: 'medium' }}</dd>
+
+      <dt>End date</dt>
+      <dd>{{ currentEvent.endDate | date: 'medium' }}</dd>
+
+      <dt>Price</dt>
+      <dd>{{ currentEvent.price | currency }}</dd>
+    </dl>
+
+    @if (canReserve()) {
+      <app-reservation-form [eventId]="currentEvent.id" />
+    } @else {
+      <p class="not-available">This event is not accepting reservations right now.</p>
+    }
+  </ng-container>
+</div>

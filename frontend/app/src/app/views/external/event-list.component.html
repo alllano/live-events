@@ -34,7 +34,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let event of events()">
-        <td>{{ event.name }}</td>
+        <td><a [routerLink]="['/events', event.id]">{{ event.name }}</a></td>
         <td>{{ event.eventTypeName }}</td>
         <td>{{ event.eventStatusName }}</td>
         <td>{{ event.venueName }}</td>
