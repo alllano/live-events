@@ -20,8 +20,10 @@ Same rules as the backend, applied to TypeScript:
 
 ## 4. Folder structure
 
+The Angular project lives at `frontend/app/` (generated via `ng new app`), not directly under `frontend/`. All Angular CLI commands (`ng serve`, `ng generate`, `ng test`) must be run from within `frontend/app/`.
+
 ```
-src/app/
+frontend/app/src/app/
 ├── views/
 │   ├── external/   (event listing, reservation form — public-facing)
 │   ├── internal/   (event creation, payment confirmation, occupancy report — admin)
@@ -34,7 +36,7 @@ src/app/
 
 | Element | Convention |
 |---|---|
-| File names | kebab-case + standard Angular suffix (`event.service.ts`, `event-list.component.ts`) |
+| File names | kebab-case + standard Angular suffix (`event.service.ts`, `event-list.component.ts`, `event-detail-response.model.ts` for plain interfaces in `common/models/`) |
 | Classes, interfaces (type), components, services | PascalCase |
 | Methods | camelCase |
 | Model/interface fields | camelCase |
