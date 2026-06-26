@@ -14,6 +14,11 @@ export class ReservationService {
     return this.httpBaseService.post<ReservationResponse>('reservations', request);
   }
 
+  /** Retrieves all reservations for the given event. */
+  getReservationsByEventId(eventId: number): Observable<ReservationResponse[]> {
+    return this.httpBaseService.get<ReservationResponse[]>('reservations', { eventId });
+  }
+
   /** Confirms payment for a PendingPayment reservation. */
   confirmPayment(id: number): Observable<ReservationResponse> {
     return this.httpBaseService.patch<ReservationResponse>(`reservations/${id}/confirm`);

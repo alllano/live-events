@@ -1,0 +1,13 @@
+.occupancy-report {
+  max-width: 480px;
+
+  dl {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0.25rem 1rem;
+  }
+
+  dt {
+    font-weight: bold;
+  }
+}

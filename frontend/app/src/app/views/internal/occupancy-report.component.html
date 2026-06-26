@@ -1,0 +1,27 @@
+<div class="occupancy-report">
+  <h2>Occupancy Report</h2>
+
+  <p *ngIf="loading()">Loading report...</p>
+
+  <p *ngIf="notFound()">Event not found.</p>
+
+  <dl *ngIf="!loading() && !notFound() && report() as currentReport">
+    <dt>Event</dt>
+    <dd>{{ currentReport.eventName }}</dd>
+
+    <dt>Status</dt>
+    <dd>{{ currentReport.eventStatusName }}</dd>
+
+    <dt>Tickets sold</dt>
+    <dd>{{ currentReport.ticketsSold }}</dd>
+
+    <dt>Tickets available</dt>
+    <dd>{{ currentReport.ticketsAvailable }}</dd>
+
+    <dt>Occupancy</dt>
+    <dd>{{ currentReport.occupancyPercentage }}%</dd>
+
+    <dt>Total revenue</dt>
+    <dd>{{ currentReport.totalRevenue | currency }}</dd>
+  </dl>
+</div>

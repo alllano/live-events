@@ -17,12 +17,12 @@ public class ReservationsController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves all reservations for the given event.
+    /// Retrieves reservations filtered by event id or customer email (at least one is required).
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<ResponseDTO<List<ReservationResponse>>>> GetReservationsByEventIdAsync([FromQuery] int eventId)
+    public async Task<ActionResult<ResponseDTO<List<ReservationResponse>>>> GetReservationsAsync([FromQuery] int? eventId, [FromQuery] string? customerEmail)
     {
-        List<ReservationResponse> reservations = await _reservationService.GetReservationsByEventIdAsync(eventId);
+        List<ReservationResponse> reservations = await _reservationService.GetReservationsAsync(eventId, customerEmail);
         ResponseDTO<List<ReservationResponse>> response = ResponseDTO<List<ReservationResponse>>.AsResponseDTO(reservations, StatusCodes.Status200OK);
         return Ok(response);
     }

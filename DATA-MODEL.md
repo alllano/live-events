@@ -220,6 +220,14 @@ public class VenueConfiguration : IEntityTypeConfiguration<Venue>
 | activo | `Active` |
 | completado | `Completed` (calculated, not persisted) |
 
+### 11. Reservation lookup by customer email (FR-05 self-service cancellation)
+
+FR-05 states "any party can cancel a reservation" — this includes the customer themselves, not just the admin. Since the system has no authentication, the customer needs a way to find their own reservation(s) without logging in.
+
+**Why not lookup by `reservationCode`**: the code only exists once a reservation reaches `Confirmed` (assigned in FR-04) — it remains `string.Empty` while `PendingPayment`. A customer wanting to cancel before paying (arguably the most common case) would have no code to search by.
+
+**Resolution**: customers look up their reservations by `customerEmail`, which exists from the moment of creation regardless of status. This requires extending the existing `GET /api/v1/reservations` endpoint to also accept an optional `customerEmail` query parameter (in addition to the existing `eventId` filter), returning all reservations tied to that email (any status), so the customer can see and act on whichever one applies.
+
 ## Reference data (seeded on startup)
 
 **Locations_City:**

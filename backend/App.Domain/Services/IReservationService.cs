@@ -28,7 +28,8 @@ public interface IReservationService
     Task<ReservationResponse> ReleaseLostReservationAsync(int reservationId);
 
     /// <summary>
-    /// Retrieves all reservations for a given event.
+    /// Retrieves reservations filtered by event id or customer email (at least one must be provided; eventId takes
+    /// precedence when both are given).
     /// </summary>
-    Task<List<ReservationResponse>> GetReservationsByEventIdAsync(int eventId);
+    Task<List<ReservationResponse>> GetReservationsAsync(int? eventId, string? customerEmail);
 }

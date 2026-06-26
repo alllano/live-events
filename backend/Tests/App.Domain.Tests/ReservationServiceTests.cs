@@ -357,10 +357,10 @@ public class ReservationServiceTests
         Assert.Equal(ReservationStatusIds.Cancelled, lostReservation.ReservationStatusId);
     }
 
-    // ----- GetReservationsByEventIdAsync -----
+    // ----- GetReservationsAsync -----
 
     [Fact]
-    public async Task GetReservationsByEventIdAsync_WhenEventHasReservations_MapsResponsesWithResolvedStatusName()
+    public async Task GetReservationsAsync_WhenEventIdProvided_MapsResponsesWithResolvedStatusName()
     {
         Event eventEntity = CreateEvent();
         Customer customer = CreateCustomer();
@@ -371,13 +371,39 @@ public class ReservationServiceTests
 
         ReservationService reservationService = CreateService(new Mock<IEventRepository>(), reservationRepositoryMock, new Mock<ICustomerRepository>(), new Mock<IUnitOfWork>(), CreateAlwaysValidValidatorMock().Object);
 
-        List<ReservationResponse> responses = await reservationService.GetReservationsByEventIdAsync(eventEntity.Id);
+        List<ReservationResponse> responses = await reservationService.GetReservationsAsync(eventEntity.Id, customerEmail: null);
 
         Assert.Single(responses);
         Assert.Equal("Confirmed", responses[0].ReservationStatusName);
         Assert.Equal("EV-123456", responses[0].ReservationCode);
         Assert.Equal(eventEntity.Name, responses[0].EventName);
         Assert.Equal(customer.Name, responses[0].CustomerName);
+    }
+
+    [Fact]
+    public async Task GetReservationsAsync_WhenOnlyCustomerEmailProvided_QueriesByCustomerEmail()
+    {
+        Event eventEntity = CreateEvent();
+        Customer customer = CreateCustomer(email: "john.doe@example.com");
+        Reservation reservation = CreateReservation(1, eventEntity, customer, ReservationStatusIds.PendingPayment);
+
+        Mock<IReservationRepository> reservationRepositoryMock = new Mock<IReservationRepository>();
+        reservationRepositoryMock.Setup(repo => repo.GetByCustomerEmailAsync("john.doe@example.com")).ReturnsAsync(new List<Reservation> { reservation });
+
+        ReservationService reservationService = CreateService(new Mock<IEventRepository>(), reservationRepositoryMock, new Mock<ICustomerRepository>(), new Mock<IUnitOfWork>(), CreateAlwaysValidValidatorMock().Object);
+
+        List<ReservationResponse> responses = await reservationService.GetReservationsAsync(eventId: null, customerEmail: "john.doe@example.com");
+
+        Assert.Single(responses);
+        reservationRepositoryMock.Verify(repo => repo.GetByEventIdAsync(It.IsAny<int>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task GetReservationsAsync_WhenNeitherFilterIsProvided_ThrowsValidationException()
+    {
+        ReservationService reservationService = CreateService(new Mock<IEventRepository>(), new Mock<IReservationRepository>(), new Mock<ICustomerRepository>(), new Mock<IUnitOfWork>(), CreateAlwaysValidValidatorMock().Object);
+
+        await Assert.ThrowsAsync<App.Domain.Exceptions.ValidationException>(() => reservationService.GetReservationsAsync(eventId: null, customerEmail: null));
     }
 
     // ----- Shared helpers -----
