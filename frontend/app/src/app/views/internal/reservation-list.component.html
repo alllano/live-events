@@ -1,0 +1,44 @@
+<div class="reservation-list">
+  <h2>Reservations</h2>
+
+  <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
+
+  <p *ngIf="loading()">Loading reservations...</p>
+
+  <p *ngIf="!loading() && reservations().length === 0">No reservations found for this event.</p>
+
+  <table *ngIf="!loading() && reservations().length > 0">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Tickets</th>
+        <th>Total price</th>
+        <th>Status</th>
+        <th>Code</th>
+        <th>Reservation date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reservation of reservations()">
+        <td>{{ reservation.customerName }}</td>
+        <td>{{ reservation.ticketQuantity }}</td>
+        <td>{{ reservation.totalPrice | currency }}</td>
+        <td>{{ reservation.reservationStatusName }}</td>
+        <td>{{ reservation.reservationCode || '—' }}</td>
+        <td>{{ reservation.reservationDate | date: 'medium' }}</td>
+        <td>
+          <button *ngIf="reservation.reservationStatusName === 'PendingPayment'" (click)="confirmPayment(reservation.id)">
+            Confirm payment
+          </button>
+          <button *ngIf="reservation.reservationStatusName === 'Confirmed'" (click)="cancelReservation(reservation.id)">
+            Cancel
+          </button>
+          <button *ngIf="reservation.reservationStatusName === 'Lost'" (click)="releaseReservation(reservation.id)">
+            Release
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
