@@ -118,7 +118,7 @@ A standard response wrapper (`ResponseDTO` / `AsResponseDTO<T>`) is used consist
 - **URL versioning**: `api/v1/[controller]`, without a versioning library given the scope.
 - Resources as nouns, not actions. GET for queries/listing (with query-param filters), POST for creation, PATCH for state transitions on an existing resource.
   - Example: `PATCH /api/v1/reservations/{id}/confirm`, `PATCH /api/v1/reservations/{id}/cancel` — instead of a generic PUT with the new state in the body.
-- Swagger enabled for interactive documentation.
+- Swagger enabled for interactive documentation, **in all environments including production** — a deliberate decision for this technical test, so the evaluator can explore and exercise the live API without needing a separate tool. In a real production system this would normally be restricted to non-production environments, since it exposes the full API surface (all endpoints, parameters, and models) publicly.
 
 ## 12. CORS
 
