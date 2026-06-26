@@ -239,3 +239,11 @@ public class VenueConfiguration : IEntityTypeConfiguration<Venue>
 | 2 | Confirmed |
 | 3 | Cancelled |
 | 4 | Lost |
+
+**dbo_LogType:**
+| Id | Name |
+|---|---|
+| 1 | HandledError |
+| 2 | UnhandledError |
+
+*Rationale*: `HandledError` covers exceptions belonging to the `AppException` hierarchy (expected business errors, already mapped to a specific status code). `UnhandledError` covers anything caught by the middleware's generic `catch` — these are the entries worth actively monitoring, since they represent unexpected failures rather than normal business-rule rejections. Logging both at the same level of severity would bury real bugs under routine validation rejections.
