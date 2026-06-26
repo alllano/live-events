@@ -156,6 +156,35 @@ The original draft included a `TypeStatus` catalog meant to distinguish "types o
 
 Entity ↔ DTO mapping profiles live in `App.Infrastructure` (not `App.Common`), since a mapping profile needs visibility of both the Entities (Infrastructure) and the DTOs (Common). This keeps `App.Common` free of any dependency on other layers, per the dependency direction defined in `ARCHITECTURE.md`.
 
+## Schema mapping (diagram naming → SQL Server schema/table → C# class)
+
+In the diagram above, the prefix before the underscore denotes the **SQL Server schema**, and the suffix after it is the **table name** — it is not a literal compound table name. C# Entity classes use the short name only (no prefix); the schema is applied via Fluent API (`ToTable("TableName", "SchemaName")`).
+
+| Diagram name | SQL Schema | SQL Table | C# Entity class |
+|---|---|---|---|
+| `Locations_City` | `Locations` | `City` | `City` |
+| `Locations_Venue` | `Locations` | `Venue` | `Venue` |
+| `Events_EventType` | `Events` | `EventType` | `EventType` |
+| `Events_EventStatus` | `Events` | `EventStatus` | `EventStatus` |
+| `Events_Event` | `Events` | `Event` | `Event` |
+| `Users_Customer` | `Users` | `Customer` | `Customer` |
+| `Reservations_ReservationStatus` | `Reservations` | `ReservationStatus` | `ReservationStatus` |
+| `Users_Reservation` | `Users` | `Reservation` | `Reservation` |
+| `dbo_LogType` | `dbo` | `LogType` | `LogType` |
+| `dbo_Log` | `dbo` | `Log` | `Log` |
+
+Example Fluent API configuration:
+```csharp
+public class VenueConfiguration : IEntityTypeConfiguration<Venue>
+{
+    public void Configure(EntityTypeBuilder<Venue> builder)
+    {
+        builder.ToTable("Venue", "Locations");
+        // ... property configuration
+    }
+}
+```
+
 ## English naming reference
 
 | Spanish (requirements) | Entity / field in code |
