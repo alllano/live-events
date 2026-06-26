@@ -1,23 +1,19 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
-
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
-
-# Environment files
-/.env
+# =========================
+# Angular / Node (frontend/)
+# =========================
+**/dist/
+**/out-tsc/
+**/tmp/
+**/coverage/
+**/e2e/test-output/
+**/.angular/
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
 
 # Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
+**/.angular-cli.json
+**/.ng/
 
 # TypeScript cache
 *.tsbuildinfo
@@ -26,3 +22,70 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# =========================
+# .NET (backend/)
+# =========================
+**/bin/
+**/obj/
+**/out/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# VS Code (si lo usas para alguna parte)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rtifacts/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# EF Core / local tooling
+*.dbmdl
+*.dbproj.schemaview
+
+# =========================
+# Environment & secrets
+# =========================
+# Backend:
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/secrets.json
+**/*.local.json
+
+# Frontend: 
+**/environment.local.ts
+
+# Variables de entorno genéricas
+.env
+.env.local
+*.env
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
