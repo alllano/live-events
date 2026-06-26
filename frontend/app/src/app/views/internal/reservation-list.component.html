@@ -1,6 +1,8 @@
 <div class="reservation-list">
   <h2>Reservations</h2>
 
+  <p><a [routerLink]="['/admin/events', eventId(), 'report']">View occupancy report</a></p>
+
   <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
 
   <p *ngIf="loading()">Loading reservations...</p>

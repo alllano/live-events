@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ReservationResponse } from '../../common/models/reservation-response.model';
 import { ReservationService } from '../../services/reservation.service';
@@ -8,7 +8,7 @@ import { ReservationService } from '../../services/reservation.service';
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './reservation-list.component.html',
   styleUrl: './reservation-list.component.scss',
 })
@@ -16,15 +16,14 @@ export class ReservationListComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly reservationService = inject(ReservationService);
 
-  private eventId = 0;
-
+  readonly eventId = signal(0);
   readonly reservations = signal<ReservationResponse[]>([]);
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
-      this.eventId = Number(paramMap.get('id'));
+      this.eventId.set(Number(paramMap.get('id')));
       this.loadReservations();
     });
   }
@@ -56,7 +55,7 @@ export class ReservationListComponent implements OnInit {
   private loadReservations(): void {
     this.loading.set(true);
 
-    this.reservationService.getReservationsByEventId(this.eventId).subscribe({
+    this.reservationService.getReservationsByEventId(this.eventId()).subscribe({
       next: (reservations) => {
         this.reservations.set(reservations);
         this.loading.set(false);
