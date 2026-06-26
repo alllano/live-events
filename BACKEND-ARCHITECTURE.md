@@ -79,7 +79,12 @@ AppException (abstract)
 └── ValidationException              → 400 Bad Request
 ```
 
-An error log table in the database stores exceptions caught by the middleware (message, stack trace, endpoint, timestamp).
+An error log table in the database stores **all** exceptions caught by the middleware (message, stack trace, endpoint, timestamp), distinguished by `LogTypeId`:
+
+- `LogTypeIds.HandledError`: any exception from the `AppException` hierarchy — expected business rejections, already mapped to a specific status code. Logged for full traceability (e.g., how often a given business rule is being rejected), without exposing internal details to the client.
+- `LogTypeIds.UnhandledError`: any exception not part of the `AppException` hierarchy — genuinely unexpected failures. This is the subset worth actively monitoring; filtering by this type alone surfaces real bugs without the noise of routine business-rule rejections.
+
+The client-facing response only ever includes a safe message (`ex.Message` for `AppException`, a generic message for unhandled exceptions) — stack traces are never returned to the client regardless of log type.
 
 ## 7. Validation
 

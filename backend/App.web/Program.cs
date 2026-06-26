@@ -2,6 +2,7 @@ using App.Domain.Services;
 using App.Infrastructure.Mapping;
 using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
+using App.web.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,12 +40,15 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IVenueRepository, VenueRepository>();
+builder.Services.AddScoped<ILogRepository, LogRepository>();
 
 // Services
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
