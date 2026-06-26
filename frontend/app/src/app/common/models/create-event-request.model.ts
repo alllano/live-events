@@ -1,3 +1,5 @@
+import { EventType } from '../enums/event-type';
+
 export interface CreateEventRequest {
   name: string;
   description: string;
@@ -6,5 +8,5 @@ export interface CreateEventRequest {
   startDate: string;
   endDate: string;
   price: number;
-  eventTypeId: number;
+  eventTypeId: EventType;
 }

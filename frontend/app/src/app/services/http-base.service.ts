@@ -38,7 +38,9 @@ export class HttpBaseService {
   }
 
   private buildUrl(endpoint: string): string {
-    return `${environment.apiUrl}${endpoint}`;
+    const baseUrl = environment.apiUrl.replace(/\/+$/, '');
+    const normalizedEndpoint = endpoint.replace(/^\/+/, '');
+    return `${baseUrl}/${normalizedEndpoint}`;
   }
 
   private buildParams(params?: Record<string, unknown>): HttpParams {

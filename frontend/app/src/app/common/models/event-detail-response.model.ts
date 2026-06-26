@@ -1,10 +1,11 @@
 import { EventStatus } from '../enums/event-status';
+import { EventType } from '../enums/event-type';
 
 export interface EventDetailResponse {
   id: number;
   name: string;
   description: string;
-  eventTypeId: number;
+  eventTypeId: EventType;
   eventTypeName: string;
   eventStatusId: EventStatus;
   eventStatusName: string;
