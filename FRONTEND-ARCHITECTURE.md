@@ -1,7 +1,7 @@
 # Architecture & Conventions — Frontend (Angular)
 
 ## 1. Stack and versions
-- Angular 22
+- Angular 21.2 (confirmed installed version — Signal Forms and Vitest ship as defaults from this release onward)
 - TypeScript
 - Signal Forms (`@angular/forms/signals`)
 - Vitest (CLI's default test runner)
