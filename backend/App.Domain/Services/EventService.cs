@@ -5,6 +5,7 @@ using App.Infrastructure.Entities;
 using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
 using AutoMapper;
+using FluentValidation;
 
 namespace App.Domain.Services;
 
@@ -14,21 +15,26 @@ public class EventService : IEventService
     private readonly IReservationRepository _reservationRepository;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IValidator<CreateEventRequest> _createEventRequestValidator;
 
     public EventService(
         IEventRepository eventRepository,
         IReservationRepository reservationRepository,
         IMapper mapper,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IValidator<CreateEventRequest> createEventRequestValidator)
     {
         _eventRepository = eventRepository;
         _reservationRepository = reservationRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _createEventRequestValidator = createEventRequestValidator;
     }
 
     public async Task<EventDetailResponse> CreateEventAsync(CreateEventRequest request)
     {
+        RequestValidationHelper.ValidateOrThrow(_createEventRequestValidator, request);
+
         int? venueCapacity = await _eventRepository.GetVenueCapacityAsync(request.VenueId);
         if (venueCapacity is null)
         {

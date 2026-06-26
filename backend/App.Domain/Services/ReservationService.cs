@@ -5,6 +5,7 @@ using App.Infrastructure.Entities;
 using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
 using AutoMapper;
+using FluentValidation;
 
 namespace App.Domain.Services;
 
@@ -15,23 +16,28 @@ public class ReservationService : IReservationService
     private readonly ICustomerRepository _customerRepository;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IValidator<CreateReservationRequest> _createReservationRequestValidator;
 
     public ReservationService(
         IEventRepository eventRepository,
         IReservationRepository reservationRepository,
         ICustomerRepository customerRepository,
         IMapper mapper,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IValidator<CreateReservationRequest> createReservationRequestValidator)
     {
         _eventRepository = eventRepository;
         _reservationRepository = reservationRepository;
         _customerRepository = customerRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _createReservationRequestValidator = createReservationRequestValidator;
     }
 
     public async Task<ReservationResponse> CreateReservationAsync(CreateReservationRequest request)
     {
+        RequestValidationHelper.ValidateOrThrow(_createReservationRequestValidator, request);
+
         Event? existingEvent = await _eventRepository.GetByIdAsync(request.EventId);
         if (existingEvent is null)
         {
