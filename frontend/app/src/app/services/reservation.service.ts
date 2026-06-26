@@ -19,6 +19,11 @@ export class ReservationService {
     return this.httpBaseService.get<ReservationResponse[]>('reservations', { eventId });
   }
 
+  /** Retrieves all reservations for the given customer email. */
+  getReservationsByEmail(customerEmail: string): Observable<ReservationResponse[]> {
+    return this.httpBaseService.get<ReservationResponse[]>('reservations', { customerEmail });
+  }
+
   /** Confirms payment for a PendingPayment reservation. */
   confirmPayment(id: number): Observable<ReservationResponse> {
     return this.httpBaseService.patch<ReservationResponse>(`reservations/${id}/confirm`);

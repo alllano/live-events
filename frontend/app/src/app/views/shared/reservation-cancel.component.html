@@ -1,0 +1,46 @@
+<div class="reservation-cancel">
+  <h2>My Reservations</h2>
+
+  <div class="search">
+    <input
+      type="email"
+      placeholder="Enter your email"
+      [(ngModel)]="customerEmail"
+      (keyup.enter)="findReservations()"
+    />
+    <button (click)="findReservations()">Find my reservations</button>
+  </div>
+
+  <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
+
+  <p *ngIf="loading()">Searching reservations...</p>
+
+  <p *ngIf="!loading() && searched() && reservations().length === 0">No reservations found for that email.</p>
+
+  <table *ngIf="!loading() && reservations().length > 0">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Tickets</th>
+        <th>Total price</th>
+        <th>Status</th>
+        <th>Reservation date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reservation of reservations()">
+        <td>{{ reservation.eventName }}</td>
+        <td>{{ reservation.ticketQuantity }}</td>
+        <td>{{ reservation.totalPrice | currency }}</td>
+        <td>{{ reservation.reservationStatusName }}</td>
+        <td>{{ reservation.reservationDate | date: 'medium' }}</td>
+        <td>
+          <button *ngIf="reservation.reservationStatusName === 'Confirmed'" (click)="cancelReservation(reservation.id)">
+            Cancel
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
