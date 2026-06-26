@@ -1,5 +1,6 @@
 using App.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using App.Infrastructure.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

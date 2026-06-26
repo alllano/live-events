@@ -156,6 +156,18 @@ The original draft included a `TypeStatus` catalog meant to distinguish "types o
 
 Entity ↔ DTO mapping profiles live in `App.Infrastructure` (not `App.Common`), since a mapping profile needs visibility of both the Entities (Infrastructure) and the DTOs (Common). This keeps `App.Common` free of any dependency on other layers, per the dependency direction defined in `ARCHITECTURE.md`.
 
+### 9. Customer resolution on reservation creation
+
+`CreateReservationRequest` carries buyer information (`CustomerName`, `CustomerEmail`, `CustomerPhone`), but `Users_Reservation` only holds a `CustomerId` foreign key — it does not duplicate buyer data inline. When creating a reservation, the Service must:
+
+1. Look up an existing `Customer` by email.
+2. If found, reuse that `Customer`'s `Id` for the new `Reservation`.
+3. If not found, create a new `Customer` record first, then use its generated `Id`.
+
+**Why**: reusing the `Customer` record by email avoids duplicate buyer entries when the same person reserves tickets for multiple events, which better reflects real-world behavior than creating a new `Customer` row on every reservation regardless of repeat purchases.
+
+This logic belongs in the Service layer (`App.Domain`), not in the AutoMapper profile — `CreateReservationRequest → Reservation` only maps `EventId` and `TicketQuantity` directly; `CustomerId` is resolved separately before the entity is persisted.
+
 ## Schema mapping (diagram naming → SQL Server schema/table → C# class)
 
 In the diagram above, the prefix before the underscore denotes the **SQL Server schema**, and the suffix after it is the **table name** — it is not a literal compound table name. C# Entity classes use the short name only (no prefix); the schema is applied via Fluent API (`ToTable("TableName", "SchemaName")`).
@@ -184,8 +196,6 @@ public class VenueConfiguration : IEntityTypeConfiguration<Venue>
     }
 }
 ```
-
-## English naming reference
 
 | Spanish (requirements) | Entity / field in code |
 |---|---|
