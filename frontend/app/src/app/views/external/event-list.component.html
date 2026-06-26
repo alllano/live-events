@@ -1,0 +1,46 @@
+<div class="event-list">
+  <h2>Events</h2>
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search by title..."
+      [(ngModel)]="titleSearch"
+      (ngModelChange)="loadEvents()"
+    />
+
+    <select [(ngModel)]="eventTypeId" (ngModelChange)="loadEvents()">
+      <option [ngValue]="null">All types</option>
+      <option *ngFor="let eventType of eventTypes" [ngValue]="eventType.id">
+        {{ eventType.name }}
+      </option>
+    </select>
+  </div>
+
+  <p *ngIf="loading()">Loading events...</p>
+
+  <p *ngIf="!loading() && events().length === 0">No events match the current filters.</p>
+
+  <table *ngIf="!loading() && events().length > 0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Venue</th>
+        <th>Start date</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let event of events()">
+        <td><a [routerLink]="['/events', event.id]">{{ event.name }}</a></td>
+        <td>{{ event.eventTypeName }}</td>
+        <td>{{ event.eventStatusName }}</td>
+        <td>{{ event.venueName }}</td>
+        <td>{{ event.startDate | date: 'medium' }}</td>
+        <td>{{ event.price | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

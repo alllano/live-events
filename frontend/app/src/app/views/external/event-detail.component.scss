@@ -1,0 +1,19 @@
+.event-detail {
+  max-width: 600px;
+
+  dl {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0.25rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  dt {
+    font-weight: bold;
+  }
+
+  .not-available {
+    color: #b00020;
+    font-weight: bold;
+  }
+}

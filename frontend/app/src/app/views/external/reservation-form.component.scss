@@ -1,0 +1,29 @@
+.reservation-form {
+  max-width: 480px;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .error {
+    color: #b00020;
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+  }
+
+  .success {
+    color: #1a7f37;
+    font-weight: bold;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+}

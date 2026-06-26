@@ -1,0 +1,91 @@
+<div class="event-form">
+  <h2>Create Event</h2>
+
+  <form [formRoot]="eventForm">
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" type="text" [formField]="eventForm.name" />
+      @for (error of eventForm.name().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" [formField]="eventForm.description"></textarea>
+      @for (error of eventForm.description().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="venueId">Venue</label>
+      <select id="venueId" [formField]="eventForm.venueId">
+        <option value="0" disabled selected>Select a venue</option>
+        @for (venue of venues; track venue.id) {
+          <option [value]="venue.id.toString()">{{ venue.name }}</option>
+        }
+      </select>
+      @for (error of eventForm.venueId().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="maxCapacity">Max capacity</label>
+      <input id="maxCapacity" type="number" [formField]="eventForm.maxCapacity" />
+      @for (error of eventForm.maxCapacity().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="startDate">Start date</label>
+      <input id="startDate" type="datetime-local" [formField]="eventForm.startDate" />
+      @for (error of eventForm.startDate().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="endDate">End date</label>
+      <input id="endDate" type="datetime-local" [formField]="eventForm.endDate" />
+      @for (error of eventForm.endDate().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="price">Price</label>
+      <input id="price" type="number" [formField]="eventForm.price" />
+      @for (error of eventForm.price().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="eventTypeId">Event type</label>
+      <select id="eventTypeId" [formField]="eventForm.eventTypeId">
+        <option value="0" disabled selected>Select an event type</option>
+        @for (eventType of eventTypes; track eventType.id) {
+          <option [value]="eventType.id.toString()">{{ eventType.name }}</option>
+        }
+      </select>
+      @for (error of eventForm.eventTypeId().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+
+    <button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Creating...' : 'Create event' }}
+    </button>
+  </form>
+
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+</div>
