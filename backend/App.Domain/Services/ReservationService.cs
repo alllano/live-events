@@ -6,6 +6,7 @@ using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
 using AutoMapper;
 using FluentValidation;
+using ValidationException = App.Domain.Exceptions.ValidationException;
 
 namespace App.Domain.Services;
 
@@ -152,9 +153,17 @@ public class ReservationService : IReservationService
         return BuildResponseWithResolvedStatus(existingReservation);
     }
 
-    public async Task<List<ReservationResponse>> GetReservationsByEventIdAsync(int eventId)
+    public async Task<List<ReservationResponse>> GetReservationsAsync(int? eventId, string? customerEmail)
     {
-        List<Reservation> reservations = await _reservationRepository.GetByEventIdAsync(eventId);
+        if (eventId is null && string.IsNullOrWhiteSpace(customerEmail))
+        {
+            throw new ValidationException("At least one of eventId or customerEmail must be provided.");
+        }
+
+        List<Reservation> reservations = eventId.HasValue
+            ? await _reservationRepository.GetByEventIdAsync(eventId.Value)
+            : await _reservationRepository.GetByCustomerEmailAsync(customerEmail!);
+
         return _mapper.Map<List<ReservationResponse>>(reservations);
     }
 

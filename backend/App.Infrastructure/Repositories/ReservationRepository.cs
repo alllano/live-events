@@ -25,8 +25,22 @@ public class ReservationRepository : IReservationRepository
     public async Task<List<Reservation>> GetByEventIdAsync(int eventId)
     {
         return await _context.Reservations
+            .Include(reservation => reservation.Event)
+            .Include(reservation => reservation.Customer)
             .Include(reservation => reservation.ReservationStatus)
             .Where(reservation => reservation.EventId == eventId)
+            .ToListAsync();
+    }
+
+    public async Task<List<Reservation>> GetByCustomerEmailAsync(string customerEmail)
+    {
+        string customerEmailLowered = customerEmail.ToLower();
+
+        return await _context.Reservations
+            .Include(reservation => reservation.Event)
+            .Include(reservation => reservation.Customer)
+            .Include(reservation => reservation.ReservationStatus)
+            .Where(reservation => reservation.Customer.Email.ToLower() == customerEmailLowered)
             .ToListAsync();
     }
 
