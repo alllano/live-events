@@ -1,27 +1,36 @@
 .main-nav {
   display: flex;
-  gap: 1.5rem;
+  align-items: center;
+  gap: var(--space-lg);
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-lg);
 }
 
 .nav-section {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius);
 
   &__label {
     font-size: 0.75rem;
-    font-weight: bold;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     opacity: 0.7;
   }
 
+  /* Nav links use a neutral, bold color instead of the global link blue, so they stay legible
+     and consistent on both the blue (public) and red (admin) section backgrounds. */
   a {
+    color: var(--color-text);
+    font-weight: 600;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
