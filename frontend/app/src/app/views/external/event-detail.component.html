@@ -38,5 +38,10 @@
     } @else {
       <p class="not-available">This event is not accepting reservations right now.</p>
     }
+
+    <section class="admin-actions">
+      <span class="admin-actions__label">Admin actions</span>
+      <a [routerLink]="['/admin/events', currentEvent.id, 'reservations']">Manage reservations</a>
+    </section>
   </ng-container>
 </div>

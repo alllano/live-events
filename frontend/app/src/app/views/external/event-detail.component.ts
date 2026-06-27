@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { EventDetailResponse } from '../../common/models/event-detail-response.model';
 import { EventService } from '../../services/event.service';
@@ -9,7 +9,7 @@ import { ReservationFormComponent } from './reservation-form.component';
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [CommonModule, ReservationFormComponent],
+  imports: [CommonModule, ReservationFormComponent, RouterLink],
   templateUrl: './event-detail.component.html',
   styleUrl: './event-detail.component.scss',
 })
