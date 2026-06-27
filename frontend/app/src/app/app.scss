@@ -1,0 +1,35 @@
+.main-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.nav-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+
+  &__label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.nav-section--public {
+  background-color: #e8f0fe;
+}
+
+.nav-section--admin {
+  background-color: #fdecea;
+  border-left: 3px solid #b00020;
+}

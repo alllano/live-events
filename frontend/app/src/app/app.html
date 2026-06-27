@@ -1,7 +1,14 @@
-<nav>
-  <a routerLink="/events">Events</a>
-  <a routerLink="/my-reservations">My Reservations</a>
-  <a routerLink="/admin/events/create">Create Event</a>
+<nav class="main-nav">
+  <div class="nav-section nav-section--public">
+    <span class="nav-section__label">Public Portal</span>
+    <a routerLink="/events">Events</a>
+    <a routerLink="/my-reservations">My Reservations</a>
+  </div>
+
+  <div class="nav-section nav-section--admin">
+    <span class="nav-section__label">Admin Panel</span>
+    <a routerLink="/admin/events/create">Create Event</a>
+  </div>
 </nav>
 
 <router-outlet />
