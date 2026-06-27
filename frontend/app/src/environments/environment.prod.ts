@@ -1,3 +1,4 @@
 export const environment = {
-  apiUrl: 'PLACEHOLDER_API_URL',
+  production: true,
+  apiUrl: 'https://live-events-api.azurewebsites.net/api/v1'
 };
